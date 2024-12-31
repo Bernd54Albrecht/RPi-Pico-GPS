@@ -1,4 +1,4 @@
-# Raspberry Pi Pico and GPS-module SIM808
+# Raspberry Pi Pico and GPS-module SIM868
 # Get GPS position and send SMS at given interval(line 11)
 # Insert SMS recipient in line 15
 # Micro-Python module SIM800 required
@@ -9,7 +9,7 @@ import time
 import sys
 
 gps = GPS(0)
-interval = 10	# send SMS at given interval in minutes
+interval = 15	# send SMS at given interval in minutes
 
 while True:
     try:
@@ -23,4 +23,5 @@ while True:
         sys.exit()
         
     except RuntimeError:
+        time.sleep(60)	# little chance to interrupt the program
         pass

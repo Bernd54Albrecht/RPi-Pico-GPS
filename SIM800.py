@@ -65,32 +65,38 @@ class GPS:
         print("dataString=",dataString)
         dataList = dataString.split(",")
     #    print("dataList=",dataList)
-        if dataList[2] == "A":
-            print("Signal okay")
+        if len(dataList) >=2:
+            if dataList[2] == "A":
+                print("Signal okay")
 # options for SMS message format:            
-#            GNRMC = dataString            
-#            GNRMC = dataList[1]+" "+dataList[3]+dataList[4]+" "+dataList[5]+dataList[6]
+#            	GNRMC = dataString            
+#            	GNRMC = dataList[1]+" "+dataList[3]+dataList[4]+" "+dataList[5]+dataList[6]
 # best format for Google Maps:
-            BBMMmmmm = float(dataList[3])
-            BB = int(BBMMmmmm/100)
-            print("BB = ",BB)
-            BMmmmm = BBMMmmmm - 100*BB
-            print("BMmmmm = ",BMmmmm)
-            LLMMmmmm = float(dataList[5])
-            LL = int(LLMMmmmm/100)
-            print("LL = ",LL)
-            LMmmmm = LLMMmmmm - 100*LL
-            print("LMmmmm = ",LMmmmm)            
-            GNRMC = str(BB) + " " + str(BMmmmm) +" "+ dataList[4] +" "+ str(LL) +" "+ str(LMmmmm) +" "+ dataList[6]
-            print("GNRMC = ", GNRMC)
-            print(self.sendATCmd("AT+CMGF=1\r\n"))	# Select SMS Message Format
-            print(self.sendATCmd("AT+CSCA=\"+491722270333\"\r\n"))   #here: Vodafone, change to your service provider
-# 			send position to sending mobile phone
-            print(self.sendATCmd("AT+CMGS="+toAddressee+"\r\n"))	# requesting phone number = receiver of SMS
-# 			send position to own mobile phone
-#            print(self.sendATCmd("AT+CMGS=\"+49123456789\"\r\n"))	# own tel.number, receiver of SMS
-            self.sendATCmd(GNRMC+"\x1a\r\n"+"\x1b\r\n")		# SMS text (here vaiable GNRMC), then Ctrl-Z an ESC
-        else: self.sendPosition(toAddressee)
+                BBMMmmmm = float(dataList[3])
+                BB = int(BBMMmmmm/100)
+                print("BB = ",BB)
+                BMmmmm = BBMMmmmm - 100*BB
+                print("BMmmmm = ",BMmmmm)
+                LLMMmmmm = float(dataList[5])
+                LL = int(LLMMmmmm/100)
+                print("LL = ",LL)
+                LMmmmm = LLMMmmmm - 100*LL
+                print("LMmmmm = ",LMmmmm)            
+                GNRMC = str(BB) + " " + str(BMmmmm) +" "+ dataList[4] +" "+ str(LL) +" "+ str(LMmmmm) +" "+ dataList[6]
+                print("GNRMC = ", GNRMC)
+                print(self.sendATCmd("AT+CMGF=1\r\n"))	# Select SMS Message Format
+                print(self.sendATCmd("AT+CSCA=\"+491722270333\"\r\n"))   #here: Vodafone, change to your service provider
+    # 			send position to sending mobile phone
+                print(self.sendATCmd("AT+CMGS="+toAddressee+"\r\n"))	# requesting phone number = receiver of SMS
+    # 			send position to own mobile phone
+    #            print(self.sendATCmd("AT+CMGS=\"+49123456789\"\r\n"))	# own tel.number, receiver of SMS
+                self.sendATCmd(GNRMC+"\x1a\r\n"+"\x1b\r\n")		# SMS text (here vaiable GNRMC), then Ctrl-Z an ESC
+            else:
+                time.sleep(10)	# little chance to interrupt the program
+                self.sendPosition(toAddressee)
+        else:
+            time.sleep(10)	# little chance to interrupt the program
+            self.sendPosition(toAddressee)
         
     def receiveSMS(self):
         self.sendATCmd("AT+CMGF=1")
